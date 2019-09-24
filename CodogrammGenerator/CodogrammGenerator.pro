@@ -1,5 +1,5 @@
 QT -= gui
-QT += network
+QT += core network
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        DataGenerator.cpp \
         TcpServer.cpp \
         main.cpp
 
@@ -25,6 +26,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    DataGenerator.h \
     TcpServer.h \
     libs/Answer.h \
     libs/AtcrbsCoordinatePoint.h \

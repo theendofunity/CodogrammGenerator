@@ -32,38 +32,18 @@ TcpServer::TcpServer(QObject *parent)
 }
 
 
-void TcpServer::addCp(const impl::CoordinatePoint &)
-{
-
-}
-
-void TcpServer::addCp(const esgrlo::CoordinatePoint &)
-{
-
-}
-
-void TcpServer::handle(const std::shared_ptr<dsp::PeriodRepetitionAzimuth> &message)
-{
-    send(*message.get());
-}
-
-void TcpServer::setAzimuth(const Azimuth &azimuth)
-{
-
-}
-
 void TcpServer::onConnection()
 {
     qDebug() << "NEW CONNECTION";
 
     clientSocket = server->nextPendingConnection();
     connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);
-//    connect(clientSocket, &QTcpSocket::readyRead, [this]()
-
 }
 
-void TcpServer::send(pdp::AtcrbsCoordinatePoint &cp)
+void TcpServer::sendCp(pdp::AtcrbsCoordinatePoint &cp)
 {
+    if (clientSocket == nullptr)
+        return;
     if (clientSocket->state() != QAbstractSocket::ConnectedState)
         return;
 
@@ -81,8 +61,11 @@ void TcpServer::send(pdp::AtcrbsCoordinatePoint &cp)
     clientSocket->write(reinterpret_cast<const char*>(memory.data()), static_cast<int>(memory.size()));
 }
 
-void TcpServer::send(dsp::PeriodRepetitionAzimuth &azimuth)
+void TcpServer::sendAz(dsp::PeriodRepetitionAzimuth &azimuth)
 {
+    if (clientSocket == nullptr)
+        return;
+
     if (clientSocket->state() != QAbstractSocket::ConnectedState)
         return;
 
