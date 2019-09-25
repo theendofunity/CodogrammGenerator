@@ -1,13 +1,15 @@
 #include "DataGenerator.h"
 
 #include <QTimer>
+#include <QDebug>
 
 DataGenerator::DataGenerator(QObject *parent)
     : QObject(parent)
 {
-    for (uint16_t i = 0; i <= 20; i++)
+    for (auto i = 0; i <= 36; i++)
     {
-        azimuths.push_back(i);
+
+        azimuths.push_back(i * 10);
     }
 
     QTimer *cpTimer = new QTimer(this);
@@ -16,8 +18,8 @@ DataGenerator::DataGenerator(QObject *parent)
     QTimer *azTimer = new QTimer(this);
     connect(azTimer, &QTimer::timeout, this, &DataGenerator::generateAzimuthMessage);
 
-    cpTimer->start(10000);
-    azTimer->start(5000);
+    cpTimer->start(5000);
+    azTimer->start(1000);
 }
 
 void DataGenerator::generateAzimuthMessage()
@@ -28,6 +30,7 @@ void DataGenerator::generateAzimuthMessage()
     dsp::PeriodRepetitionAzimuth message;
     message.azimuth.setValue(azimuths[index]);
 
+    index++;
     emit newAzimuth(message);
 }
 
@@ -37,8 +40,10 @@ void DataGenerator::generateCpMessage()
         index = 0;
 
     pdp::AtcrbsCoordinatePoint message;
-    message.azimuth.setValue(azimuths[index]);
-    message.range = azimuths[index + 1] * 10;
+    message.azimuth.setValue((azimuths[index] * 0.1));
+    message.range = azimuths[index + 1] * 100;
+
+    index++;
 
     emit newCp(message);
 }

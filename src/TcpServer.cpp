@@ -49,7 +49,7 @@ void TcpServer::sendCp(pdp::AtcrbsCoordinatePoint &cp)
 
     qDebug() << "SENDING MESSAGE (CP)";
 
-    qDebug() << cp.bortNumber;
+    qDebug() << "BoardNum: "<< cp.bortNumber << "Az: " << cp.azimuth;
 
     PVD::Header header;
     header.type = 91;
