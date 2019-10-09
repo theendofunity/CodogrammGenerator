@@ -18,8 +18,8 @@ DataGenerator::DataGenerator(QObject *parent)
     QTimer *azTimer = new QTimer(this);
     connect(azTimer, &QTimer::timeout, this, &DataGenerator::generateAzimuthMessage);
 
-    cpTimer->start(5000);
-    azTimer->start(1000);
+    cpTimer->start(1000);
+    azTimer->start(500);
 }
 
 void DataGenerator::generateAzimuthMessage()
@@ -40,10 +40,8 @@ void DataGenerator::generateCpMessage()
         index = 0;
 
     pdp::AtcrbsCoordinatePoint message;
-    message.azimuth.setValue((azimuths[index] * 0.1));
-    message.range = azimuths[index + 1] * 100;
-
-    index++;
+    message.azimuth.setValue((azimuths[index] * 0.19));
+    message.range = azimuths[index] * 100;
 
     emit newCp(message);
 }
