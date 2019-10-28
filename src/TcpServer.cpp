@@ -4,12 +4,10 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-#include <QByteArray>
 #include <QDataStream>
-#include "libs/GenericPrototypes/BitStream.h"
+#include <QByteArray>
 
-
-#include "libs/POIProtocol.h"
+#include "libs/HeaderMessage.h"
 #include <QTime>
 
 #include <QDebug>
@@ -31,7 +29,6 @@ TcpServer::TcpServer(QObject *parent)
     }
 }
 
-
 void TcpServer::onConnection()
 {
     qDebug() << "NEW CONNECTION";
@@ -40,7 +37,7 @@ void TcpServer::onConnection()
     connect(clientSocket, &QTcpSocket::disconnected, clientSocket, &QTcpSocket::deleteLater);
 }
 
-void TcpServer::sendCp(pdp::AtcrbsCoordinatePoint &cp)
+void TcpServer::sendCp(CpMessage &cp)
 {
     if (clientSocket == nullptr)
         return;
@@ -51,19 +48,19 @@ void TcpServer::sendCp(pdp::AtcrbsCoordinatePoint &cp)
 
     qDebug() << "BoardNum: "<< cp.bortNumber << "Az: " << cp.azimuth;
 
-    PVD::Header header;
-    header.type = 91;
+    HeaderMessage header;
+    header.type = 391;
+    header.size =  static_cast<uint16_t>(sizeof (cp) + sizeof (header));
 
-    std::vector<uint8_t> memory;
-    BitStream stream(memory);
+    QDataStream stream(clientSocket);
+
     stream << header;
     stream << cp;
-    clientSocket->write(reinterpret_cast<const char*>(memory.data()), static_cast<int>(memory.size()));
 }
 
-void TcpServer::sendAz(dsp::PeriodRepetitionAzimuth &azimuth)
+void TcpServer::sendAz(AzimuthMessage &azimuth)
 {
-    if (clientSocket == nullptr)
+    if(clientSocket == nullptr)
         return;
 
     if (clientSocket->state() != QAbstractSocket::ConnectedState)
@@ -71,17 +68,14 @@ void TcpServer::sendAz(dsp::PeriodRepetitionAzimuth &azimuth)
 
     qDebug() << "SENDING MESSAGE (AZ)";
 
-    PVD::Header header;
-    header.type = 25;
-
     qDebug() << azimuth.azimuth;
 
-    std::vector<uint8_t> memory;
+    HeaderMessage header;
+    header.type = 350;
+    header.size =  static_cast<uint16_t>(sizeof (azimuth) + sizeof (header));
 
-    BitStream stream(memory);
+    QDataStream stream(clientSocket);
 
     stream << header;
     stream << azimuth;
-
-    clientSocket->write(reinterpret_cast<const char*>(memory.data()), static_cast<int>(memory.size()));
 }

@@ -28,19 +28,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    CpMessage.h \
+    libs/AzimuthMessage.h \
+    libs/HeaderMessage.h \
+    libs/CpMessage.h \
     src/DataGenerator.h \
     src/TcpServer.h \
-    libs/Answer.h \
-    libs/AtcrbsCoordinatePoint.h \
-    libs/GenericPrototypes/AbstractBitField.h \
-    libs/GenericPrototypes/BitField.h \
-    libs/GenericPrototypes/BitFieldAligner.h \
-    libs/GenericPrototypes/BitStream.h \
-    libs/GenericPrototypes/Codogram.h \
-    libs/GenericPrototypes/Field.h \
-    libs/GenericPrototypes/GenericPrototypes.h \
-    libs/GenericPrototypes/PeriodicBitField.h \
-    libs/GenericPrototypes/Serializable.h \
-    libs/GenericPrototypes/lsb.h \
-    libs/POIProtocol.h \
-    libs/PeriodRepetitionAzimuth.h

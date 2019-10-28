@@ -4,8 +4,8 @@
 
 #include <QObject>
 
-#include <libs/AtcrbsCoordinatePoint.h>
-#include <libs/PeriodRepetitionAzimuth.h>
+#include <libs/CpMessage.h>
+#include <libs/AzimuthMessage.h>
 
 
 class QTcpServer;
@@ -19,12 +19,11 @@ class TcpServer : public QObject
 public:
     TcpServer(QObject *parent = nullptr);
 
-    void sendCp(pdp::AtcrbsCoordinatePoint &cp);
-    void sendAz(dsp::PeriodRepetitionAzimuth &azimuth);
+    void sendCp(CpMessage &cp);
+    void sendAz(AzimuthMessage &azimuth);
 
 private:
     void onConnection();
-
 
 private:
     QTcpServer *server = nullptr;
